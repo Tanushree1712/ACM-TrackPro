@@ -1,11 +1,13 @@
+# ACM-TrackPro
 
-  # College Event Management UI
+A centralized ACM event management dashboard built with React JS and Firebase to manage events, documentation, participants, and administrative tracking. It enforces mandatory documentation completion, secure authentication, and structured records to ensure transparency and ACM reporting compliance.
 
-  This is a code bundle for College Event Management UI. The original project is available at https://www.figma.com/design/mNRM03cZAOpZQv7d5Fas71/College-Event-Management-UI.
+## About
 
-  ## Running the code
+This is a code bundle for College Event Management UI. The original project is available at https://www.figma.com/design/mNRM03cZAOpZQv7d5Fas71/College-Event-Management-UI.
 
-  Run `npm i` to install the dependencies.
+## Running the code
 
-  Run `npm run dev` to start the development server.
-  
+Run `npm i` to install the dependencies.
+
+Run `npm run dev` to start the development server.
