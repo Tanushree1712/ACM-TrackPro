@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { LogOut, User, Menu, X, Home, FileText, LayoutDashboard, BarChart3 } from 'lucide-react';
 import { Page } from '../App';
-import acmLogo from 'figma:asset/00d665e43d6abf23286e3228841dc8b0975226b3.png';
+import './acm-logo.png';
 
 interface HeaderProps {
   currentPage: Page;
@@ -26,6 +26,11 @@ export function Header({ currentPage, onNavigate, user, onLogout }: HeaderProps)
     setShowDrawer(false);
   };
 
+  const closeMenus = () => {
+    setShowUserMenu(false);
+    setShowDrawer(false);
+  };
+
   return (
     <header className="bg-white border-b border-gray-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -43,7 +48,7 @@ export function Header({ currentPage, onNavigate, user, onLogout }: HeaderProps)
               onClick={() => onNavigate('home')}
               className="flex items-center gap-3 hover:opacity-80 transition"
             >
-              <img src={acmLogo} alt="ACM Logo" className="w-10 h-10" />
+              <img src='acm-logo.png' alt="ACM Logo" className="w-10 h-10" />
               <div>
                 <h1 className="font-semibold text-gray-900">ACM Event Manager</h1>
                 <p className="text-xs text-gray-500">Technical Club</p>
@@ -57,6 +62,8 @@ export function Header({ currentPage, onNavigate, user, onLogout }: HeaderProps)
               <button
                 onClick={() => setShowUserMenu(!showUserMenu)}
                 className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
+                aria-expanded={showUserMenu}
+                aria-haspopup="menu"
               >
                 <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
                   <User className="w-4 h-4 text-white" />
@@ -79,7 +86,7 @@ export function Header({ currentPage, onNavigate, user, onLogout }: HeaderProps)
                     </div>
                     <button
                       onClick={() => {
-                        setShowUserMenu(false);
+                        closeMenus();
                         onLogout();
                       }}
                       className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition"
@@ -99,7 +106,7 @@ export function Header({ currentPage, onNavigate, user, onLogout }: HeaderProps)
       {showDrawer && (
         <div 
           className="fixed inset-0 bg-black/50 z-30 transition-opacity"
-          onClick={() => setShowDrawer(false)}
+          onClick={closeMenus}
         />
       )}
 
@@ -113,7 +120,7 @@ export function Header({ currentPage, onNavigate, user, onLogout }: HeaderProps)
           {/* Drawer Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
             <div className="flex items-center gap-3">
-              <img src={acmLogo} alt="ACM Logo" className="w-10 h-10" />
+              <img src='acm-logo' alt="ACM Logo" className="w-10 h-10" />
               <div>
                 <h2 className="font-semibold text-gray-900">ACM Event Manager</h2>
                 <p className="text-xs text-gray-500">Navigation Menu</p>
@@ -162,7 +169,7 @@ export function Header({ currentPage, onNavigate, user, onLogout }: HeaderProps)
             </div>
             <button
               onClick={() => {
-                setShowDrawer(false);
+                closeMenus();
                 onLogout();
               }}
               className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition font-medium"
