@@ -6,7 +6,6 @@ import { EventProposalForm } from "./components/EventProposalForm";
 import { AcceptedProposals } from "./components/AcceptedProposals";
 import { EventDocumentation } from "./components/EventDocumentation";
 import { ReportsPage } from "./components/ReportsPage";
-
 export type Page =
   | "home"
   | "proposal"
