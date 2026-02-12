@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { AlertCircle } from "lucide-react";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "./../firebase/config";
-import "./logoacm-removebg-preview (1).png";
+import "./logoacm.png";
 
 
 interface LoginPageProps {
@@ -49,7 +49,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
         {/* Logo & Header */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <img src='logoacm-removebg-preview (1).png' alt="ACM Logo" className="w-20 h-20" />
+            <img src='src\components\logoacm.png' alt="ACM Logo" className="w-20 h-20" />
           </div>
           <h1 className="text-3xl font-semibold text-gray-900 mb-2">
             ACM Event Manager

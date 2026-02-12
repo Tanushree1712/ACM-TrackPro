@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { LogOut, User, Menu, X, Home, FileText, LayoutDashboard, BarChart3 } from 'lucide-react';
 import { Page } from '../App';
-import './../assets/logoacm-removebg-preview (1).png';
+import './logoacm.png';
 
 interface HeaderProps {
   currentPage: Page;
@@ -48,7 +48,7 @@ export function Header({ currentPage, onNavigate, user, onLogout }: HeaderProps)
               onClick={() => onNavigate('home')}
               className="flex items-center gap-3 hover:opacity-80 transition"
             >
-              <img src='logoacm-removebg-preview (1).png' alt="ACM Logo" className="w-10 h-10" />
+              <img src='src\components\logoacm.png' alt="ACM Logo" className="w-10 h-10" />
               <div>
                 <h1 className="font-semibold text-gray-900">ACM Event Manager</h1>
                 <p className="text-xs text-gray-500">Technical Club</p>
