@@ -1839,7 +1839,7 @@ html {
 @property --tw-scale-x {
   syntax: "*";
   inherits: false;
-  initial-value: 1;
+  initial-value: 1; 
 }
 
 @property --tw-scale-y {
