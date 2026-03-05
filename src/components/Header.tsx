@@ -48,7 +48,7 @@ export function Header({ currentPage, onNavigate, user, onLogout }: HeaderProps)
               onClick={() => onNavigate('home')}
               className="flex items-center gap-3 hover:opacity-80 transition"
             >
-              <img src='src\components\logoacm.png' alt="ACM Logo" className="w-10 h-10" />
+              <img src='src\assets\acm-logo.png' alt="ACM Logo" className="w-10 h-10" />
               <div>
                 <h1 className="font-semibold text-gray-900">ACM Event Manager</h1>
                 <p className="text-xs text-gray-500">Technical Club</p>
@@ -120,7 +120,7 @@ export function Header({ currentPage, onNavigate, user, onLogout }: HeaderProps)
           {/* Drawer Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
             <div className="flex items-center gap-3">
-              <img src='acm-logo' alt="ACM Logo" className="w-10 h-10" />
+              <img src='src\assets\acm-logo.png' alt="ACM Logo" className="w-10 h-10" />
               <div>
                 <h2 className="font-semibold text-gray-900">ACM Event Manager</h2>
                 <p className="text-xs text-gray-500">Navigation Menu</p>
