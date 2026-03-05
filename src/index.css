@@ -266,7 +266,6 @@ body {
   iframe,
   embed,
   object {
-    vertical-align: middle;
     display: block;
   }
 
@@ -594,6 +593,7 @@ body {
   }
 
   .line-clamp-2 {
+    line-clamp: 2;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     display: -webkit-box;
@@ -1839,7 +1839,7 @@ html {
 @property --tw-scale-x {
   syntax: "*";
   inherits: false;
-  initial-value: 1; 
+  initial-value: 1;
 }
 
 @property --tw-scale-y {
