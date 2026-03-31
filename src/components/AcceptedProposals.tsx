@@ -1,13 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, Users, FileUp } from 'lucide-react';
 import { Proposal } from '../App';
+import { db } from '../firebase/config';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
 
 interface AcceptedProposalsProps {
-  proposals: Proposal[];
   onUploadDocumentation: (proposal: Proposal) => void;
 }
 
-export function AcceptedProposals({ proposals, onUploadDocumentation }: AcceptedProposalsProps) {
+export function AcceptedProposals({ onUploadDocumentation }: AcceptedProposalsProps) {
+  const [proposals, setProposals] = useState<Proposal[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const q = query(collection(db, 'proposals'), where('status', '==', 'approved'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const fetchedProposals = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Proposal[];
+      setProposals(fetchedProposals);
+      setLoading(false);
+    }, (error) => {
+      console.error("Error fetching approved proposals: ", error);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) {
+    return <div className="text-center py-12 text-gray-500">Loading approved proposals...</div>;
+  }
   return (
     <div>
       <div className="mb-8">

@@ -1,7 +1,7 @@
 // src/firebase.ts
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getAnalytics, isSupported } from "firebase/analytics";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAvpfx9pfEvPTecItINgKZGXUHV5lei6yY",
@@ -15,11 +15,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
-
-// 🔐 Authentication
-export const auth = getAuth(app);
-export const googleProvider = new GoogleAuthProvider();
-
+export const db = getFirestore(app);
 // 📊 Analytics (safe for SSR / Vite)
 export const analyticsPromise = isSupported().then((yes) =>
   yes ? getAnalytics(app) : null

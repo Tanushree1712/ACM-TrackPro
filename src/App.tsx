@@ -27,6 +27,7 @@ export interface Proposal {
 interface User {
   email: string;
   name: string;
+  role?: 'admin' | 'user';
 }
 
 function App() {
@@ -72,21 +73,30 @@ function App() {
       status: "approved",
     };
     setProposals([...proposals, newProposal]);
-    setCurrentPage("dashboard");
+    handleNavigate("dashboard");
   };
 
   const handleUploadDocumentation = (proposal: Proposal) => {
     setSelectedProposal(proposal);
-    setCurrentPage("documentation");
+    handleNavigate("documentation");
   };
 
   const handleLogin = (email: string, name: string) => {
-    setUser({ email, name });
+    const role = email.toLowerCase().includes('admin') ? 'admin' : 'user';
+    setUser({ email, name, role });
   };
 
   const handleLogout = () => {
     setUser(null);
     setCurrentPage("home");
+  };
+
+  const handleNavigate = (page: Page) => {
+    if (page === "reports" && user?.role !== "admin") {
+      setCurrentPage("home");
+      return;
+    }
+    setCurrentPage(page);
   };
 
   // Show login page if not authenticated
@@ -98,7 +108,7 @@ function App() {
     <div className="min-h-screen bg-gray-50">
       <Header
         currentPage={currentPage}
-        onNavigate={setCurrentPage}
+        onNavigate={handleNavigate}
         user={user}
         onLogout={handleLogout}
       />
@@ -107,7 +117,7 @@ function App() {
         {currentPage === "home" && (
           <HomePage
             proposals={proposals}
-            onNavigate={setCurrentPage}
+            onNavigate={handleNavigate}
           />
         )}
 
@@ -117,9 +127,6 @@ function App() {
 
         {currentPage === "dashboard" && (
           <AcceptedProposals
-            proposals={proposals.filter(
-              (p) => p.status === "approved",
-            )}
             onUploadDocumentation={handleUploadDocumentation}
           />
         )}

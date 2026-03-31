@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Upload, FileText, AlertCircle } from 'lucide-react';
 import { Proposal } from '../App';
+import { db } from '../firebase/config';
+import { collection, addDoc } from 'firebase/firestore';
 
 interface EventProposalFormProps {
   onSubmit: (proposal: Omit<Proposal, 'id' | 'status'>) => void;
@@ -16,6 +18,7 @@ export function EventProposalForm({ onSubmit }: EventProposalFormProps) {
     coordinators: ''
   });
   const [fileName, setFileName] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (field: keyof typeof formData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -28,9 +31,22 @@ export function EventProposalForm({ onSubmit }: EventProposalFormProps) {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    setIsSubmitting(true);
+    try {
+      await addDoc(collection(db, 'proposals'), {
+        ...formData,
+        status: 'pending',
+        createdAt: new Date().toISOString()
+      });
+      onSubmit(formData);
+    } catch (error) {
+      console.error("Error submitting proposal:", error);
+      alert("Failed to submit proposal. Please verify your connection or permissions.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -180,9 +196,10 @@ export function EventProposalForm({ onSubmit }: EventProposalFormProps) {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg transition font-medium shadow-sm"
+            disabled={isSubmitting}
+            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white py-3 px-6 rounded-lg transition font-medium shadow-sm"
           >
-            Submit Proposal
+            {isSubmitting ? 'Submitting...' : 'Submit Proposal'}
           </button>
         </div>
       </form>
