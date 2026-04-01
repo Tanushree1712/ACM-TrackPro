@@ -76,10 +76,11 @@ export function EventProposalForm({ user, onSubmit }: EventProposalFormProps) {
     setIsSubmitting(true);
     
     try {
-      const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8787').replace(/\/$/, '');
+      const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+      const endpoint = apiBaseUrl ? `${apiBaseUrl}/api/proposals/submit` : '/api/proposals/submit';
       const pdfDataUrl = await fileToDataUrl(proposalPdf);
 
-      const emailResponse = await fetch(`${apiBaseUrl}/api/proposals/submit`, {
+      const emailResponse = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

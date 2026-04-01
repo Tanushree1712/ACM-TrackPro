@@ -8,7 +8,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 loadEnvFile(join(__dirname, ".env"));
 
 const PORT = Number(process.env.PORT || 8787);
-const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "http://localhost:5173";
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGIN || "http://localhost:5173,http://localhost:3000")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-5.4-mini";
 const MAX_BODY_BYTES = 1024 * 1024;
@@ -57,14 +60,19 @@ function loadEnvFile(filePath) {
   }
 }
 
-function setCorsHeaders(res) {
-  res.setHeader("Access-Control-Allow-Origin", ALLOWED_ORIGIN);
+function setCorsHeaders(req, res) {
+  const requestOrigin = req.headers.origin;
+  if (requestOrigin && ALLOWED_ORIGINS.includes(requestOrigin)) {
+    res.setHeader("Access-Control-Allow-Origin", requestOrigin);
+  } else if (ALLOWED_ORIGINS.includes("*")) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+  }
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 }
 
-function sendJson(res, statusCode, payload) {
-  setCorsHeaders(res);
+function sendJson(req, res, statusCode, payload) {
+  setCorsHeaders(req, res);
   res.writeHead(statusCode, { "Content-Type": "application/json; charset=utf-8" });
   res.end(JSON.stringify(payload));
 }
@@ -429,14 +437,14 @@ const server = createServer(async (req, res) => {
   const requestUrl = new URL(req.url || "/", `http://${req.headers.host}`);
 
   if (req.method === "OPTIONS") {
-    setCorsHeaders(res);
+    setCorsHeaders(req, res);
     res.writeHead(204);
     res.end();
     return;
   }
 
   if (req.method === "GET" && requestUrl.pathname === "/api/health") {
-    sendJson(res, 200, {
+    sendJson(req, res, 200, {
       ok: true,
       model: OPENAI_MODEL,
       aiConfigured: Boolean(OPENAI_API_KEY),
@@ -450,14 +458,14 @@ const server = createServer(async (req, res) => {
       const payload = await readJsonBody(req);
 
       if (!payload?.proposal?.eventName) {
-        sendJson(res, 400, {
+        sendJson(req, res, 400, {
           error: "Proposal details are required.",
         });
         return;
       }
 
       if (!payload?.pdfAttachment?.dataBase64) {
-        sendJson(res, 400, {
+        sendJson(req, res, 400, {
           error: "Attach a proposal PDF before submitting.",
         });
         return;
@@ -465,7 +473,7 @@ const server = createServer(async (req, res) => {
 
       const emailResult = await emailProposalToFaculty(payload);
 
-      sendJson(res, 200, {
+      sendJson(req, res, 200, {
         ok: true,
         recipients: FACULTY_EMAILS,
         messageId: emailResult.messageId,
@@ -474,7 +482,7 @@ const server = createServer(async (req, res) => {
       const message =
         error instanceof Error ? error.message : "Unexpected error while emailing the proposal PDF.";
 
-      sendJson(res, 500, {
+      sendJson(req, res, 500, {
         error: message,
       });
     }
@@ -494,7 +502,7 @@ const server = createServer(async (req, res) => {
       checklistData = buildChecklist(payload);
 
       if (!payload?.proposal?.eventName) {
-        sendJson(res, 400, {
+        sendJson(req, res, 400, {
           error: "Proposal data is required to generate an event report.",
           ...checklistData,
           aiReport: null,
@@ -504,7 +512,7 @@ const server = createServer(async (req, res) => {
       }
 
       if (!OPENAI_API_KEY) {
-        sendJson(res, 200, {
+        sendJson(req, res, 200, {
           ...checklistData,
           aiReport: null,
           model: null,
@@ -516,7 +524,7 @@ const server = createServer(async (req, res) => {
 
       const aiReport = await generateAiReport(payload, checklistData);
 
-      sendJson(res, 200, {
+      sendJson(req, res, 200, {
         ...checklistData,
         aiReport,
         model: OPENAI_MODEL,
@@ -525,7 +533,7 @@ const server = createServer(async (req, res) => {
       const message =
         error instanceof Error ? error.message : "Unexpected error while generating the event report.";
 
-      sendJson(res, 200, {
+      sendJson(req, res, 200, {
         ...checklistData,
         aiReport: null,
         model: null,
@@ -535,7 +543,7 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  sendJson(res, 404, { error: "Route not found." });
+  sendJson(req, res, 404, { error: "Route not found." });
 });
 
 server.listen(PORT, () => {
