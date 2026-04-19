@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { LoginPage } from "./components/LoginPage";
 import { Header } from "./components/Header";
+import EventCalendar from "./EventCalendar";
 import { HomePage } from "./components/HomePage";
 import { EventProposalForm } from "./components/EventProposalForm";
 import { AcceptedProposals } from "./components/AcceptedProposals";
@@ -14,7 +15,8 @@ export type Page =
   | "dashboard"
   | "documentation"
   | "reports"
-  | "approvals";
+  | "approvals"
+  | "calendar";
 
 export interface Proposal {
   id: string;
@@ -153,6 +155,7 @@ function App() {
         )}
 
         {currentPage === "reports" && <ReportsPage />}
+        {currentPage === "calendar" && <EventCalendar />}
       </main>
     </div>
   );

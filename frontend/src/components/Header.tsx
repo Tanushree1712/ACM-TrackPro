@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LogOut, User, Menu, X, Home, FileText, LayoutDashboard, BarChart3, CheckCircle } from 'lucide-react';
+import { LogOut, User, Menu, X, Home, FileText, Calendar, LayoutDashboard, BarChart3, CheckCircle } from 'lucide-react';
 import { Page } from '../App';
 import './logoacm.png';
 
@@ -18,14 +18,10 @@ export function Header({ currentPage, onNavigate, user, onLogout }: HeaderProps)
     { id: 'home' as Page, label: 'Home', icon: Home },
     { id: 'proposal' as Page, label: 'Submit Proposal', icon: FileText },
     { id: 'dashboard' as Page, label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'calendar' as Page, label: 'Calendar', icon: Calendar },
   ];
 
-  const adminNavItems = user.role === 'admin' ? [
-    { id: 'approvals' as Page, label: 'Approvals', icon: CheckCircle },
-    { id: 'reports' as Page, label: 'Reports', icon: BarChart3 }
-  ] : [];
-
-  const navItems = [...baseNavItems, ...adminNavItems];
+  const navItems = baseNavItems;
 
   const handleNavigation = (page: Page) => {
     onNavigate(page);
@@ -41,6 +37,8 @@ export function Header({ currentPage, onNavigate, user, onLogout }: HeaderProps)
     <header className="bg-white border-b border-gray-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
+
+          {/* LEFT SECTION */}
           <div className="flex items-center gap-3">
             <button
               onClick={() => setShowDrawer(!showDrawer)}
@@ -54,57 +52,56 @@ export function Header({ currentPage, onNavigate, user, onLogout }: HeaderProps)
               onClick={() => onNavigate('home')}
               className="flex items-center gap-3 hover:opacity-80 transition"
             >
-              <img src='src\assets\acm-logo.png' alt="ACM Logo" className="w-10 h-10" />
+              <img src='src\\assets\\acm-logo.png' alt="ACM Logo" className="w-10 h-10" />
               <div>
                 <h1 className="font-semibold text-gray-900">ACM Event Manager</h1>
                 <p className="text-xs text-gray-500">Technical Club</p>
               </div>
             </button>
           </div>
-          
-          <div className="flex items-center gap-4">
-            {/* User Menu */}
-            <div className="relative">
-              <button
-                onClick={() => setShowUserMenu(!showUserMenu)}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
-                aria-expanded={showUserMenu}
-                aria-haspopup="menu"
-              >
-                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                  <User className="w-4 h-4 text-white" />
-                </div>
-                <span className="text-sm font-medium text-gray-700 max-w-[150px] truncate">
-                  {user.name}
-                </span>
-              </button>
 
-              {showUserMenu && (
-                <>
-                  <div 
-                    className="fixed inset-0 z-10" 
-                    onClick={() => setShowUserMenu(false)}
-                  />
-                  <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-20">
-                    <div className="px-4 py-2 border-b border-gray-100">
-                      <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                      <p className="text-xs text-gray-500 truncate">{user.email}</p>
-                    </div>
-                    <button
-                      onClick={() => {
-                        closeMenus();
-                        onLogout();
-                      }}
-                      className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      Sign Out
-                    </button>
+          {/* USER MENU (RIGHT SIDE) */}
+          <div className="relative">
+            <button
+              onClick={() => setShowUserMenu(!showUserMenu)}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
+              aria-expanded={showUserMenu}
+              aria-haspopup="menu"
+            >
+              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                <User className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-sm font-medium text-gray-700 max-w-[150px] truncate">
+                {user.name}
+              </span>
+            </button>
+
+            {showUserMenu && (
+              <>
+                <div 
+                  className="fixed inset-0 z-10" 
+                  onClick={() => setShowUserMenu(false)}
+                />
+                <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-20">
+                  <div className="px-4 py-2 border-b border-gray-100">
+                    <p className="text-sm font-medium text-gray-900">{user.name}</p>
+                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
                   </div>
-                </>
-              )}
-            </div>
+                  <button
+                    onClick={() => {
+                      closeMenus();
+                      onLogout();
+                    }}
+                    className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Sign Out
+                  </button>
+                </div>
+              </>
+            )}
           </div>
+
         </div>
       </div>
 
@@ -123,10 +120,11 @@ export function Header({ currentPage, onNavigate, user, onLogout }: HeaderProps)
         }`}
       >
         <div className="flex flex-col h-full">
+
           {/* Drawer Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
             <div className="flex items-center gap-3">
-              <img src='src\assets\acm-logo.png' alt="ACM Logo" className="w-10 h-10" />
+              <img src='src\\assets\\acm-logo.png' alt="ACM Logo" className="w-10 h-10" />
               <div>
                 <h2 className="font-semibold text-gray-900">ACM Event Manager</h2>
                 <p className="text-xs text-gray-500">Navigation Menu</p>
@@ -184,6 +182,7 @@ export function Header({ currentPage, onNavigate, user, onLogout }: HeaderProps)
               Sign Out
             </button>
           </div>
+
         </div>
       </aside>
     </header>
